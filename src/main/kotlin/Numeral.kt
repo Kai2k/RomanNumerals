@@ -1,4 +1,4 @@
-enum class Numeral(val value: Int, val numeral: String, val incremental: Int) {
+enum class Numeral(val value: Int, val numeral: String, val valueForAddition: Int) {
     ONE(1, "I", 1),
     FIVE(5, "V", 5),
     TEN(10, "X", 1),

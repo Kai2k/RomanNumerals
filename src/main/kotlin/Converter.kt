@@ -1,33 +1,23 @@
-import javafx.geometry.Pos
-
 class Converter {
     fun convert(input: Int): String {
-//        return convertNumber(input, Position.ONE)
-        return foo(input)
+        return convertByPosition(input)
+    }
+
+    private fun convertByPosition(number: Int): String {
+        var output = ""
+        var remainderToConvert = number
+        while (remainderToConvert > 0) {
+            val highestPosition = highestPosition(remainderToConvert)
+            val countAtPosition = getCountAtPosition(remainderToConvert, highestPosition)
+            output = output.plus(convertNumber(countAtPosition, highestPosition))
+            remainderToConvert = remainderToConvert.minus(getSumAtPosition(countAtPosition, highestPosition))
+        }
+        return output
     }
 
     private fun highestPosition(number: Int): Position {
         val positions = Position.values()
         return positions.first { position -> position.min <= number && number <= position.max }
-    }
-
-    private fun foo(number: Int): String {
-        var output = ""
-        var abc = number
-        while (abc > 0) {
-            val highestPosition = highestPosition(abc)
-            output = output.plus(convertNumber(getCountAtPosition(abc, highestPosition), highestPosition))
-            abc = abc.minus(getSumAtPosition(getCountAtPosition(abc, highestPosition), highestPosition))
-        }
-        return output
-    }
-
-    private fun getSumAtPosition(number: Int, position: Position): Int {
-        return number * position.min
-    }
-
-    private fun getCountAtPosition(number: Int, position: Position): Int {
-        return number / position.min
     }
 
     private fun convertNumber(number: Int, position: Position): String {
@@ -38,6 +28,14 @@ class Converter {
         if (matchingNumeral != null) return matchingNumeral.numeral
         if (shouldSubtractFromNextHighestNumeral(number, higherNumeral.value)) return one() + higherNumeral.numeral
         return convertToNumeralsWithAddition(lowerNumeral, number, position)
+    }
+
+    private fun getCountAtPosition(number: Int, position: Position): Int {
+        return number / position.min
+    }
+
+    private fun getSumAtPosition(number: Int, position: Position): Int {
+        return number * position.min
     }
 
     private fun nextLowestNumeralForPosition(number: Int, position: Position): Numeral? {
@@ -58,7 +56,7 @@ class Converter {
 
     private fun convertToNumeralsWithAddition(lowerNumeral: Numeral, number: Int, position: Position): String {
         var output = lowerNumeral.numeral
-        val difference = number - lowerNumeral.incremental
+        val difference = number - lowerNumeral.valueForAddition
         output += times(difference) { position.numeralOne.numeral }
         return output
     }
