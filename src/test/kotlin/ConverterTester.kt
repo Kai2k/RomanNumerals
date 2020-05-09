@@ -5,7 +5,7 @@ import org.junit.jupiter.params.provider.CsvSource
 class ConverterTester {
 
     @ParameterizedTest
-    @CsvSource("1, I")
+    @CsvSource("1, I", "2, II")
     fun `convert number into roman numeral`(input: Int, output: String) {
         val result = Converter().convert(input)
         assertEquals(output, result)

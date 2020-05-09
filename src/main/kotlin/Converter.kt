@@ -4,6 +4,7 @@ class Converter {
     }
 
     fun convert(input: Int): String {
-        return "I"
+        if (input == 1) return "I" else return "II"
+
     }
 }
