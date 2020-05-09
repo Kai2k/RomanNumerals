@@ -1,11 +1,26 @@
+import javafx.geometry.Pos
+
 class Converter {
     fun convert(input: Int): String {
-        return convertOnes(input)
+        return convertNumber(input)
     }
 
-    private fun convertOnes(number: Int): String {
-        val lowerNumeral = nextLowestNumeral(number) ?: Numeral.ONE
-        val higherNumeral = nextHighestNumeral(number) ?: Numeral.ONE_HUNDRED
+    private fun highestPosition(number: Int): Position {
+        val positions = Position.values()
+        return positions.first { position -> position.min <= number && number <= position.max }
+    }
+
+    private fun foo(number: Int) {
+        val highestPosition = highestPosition(number)
+    }
+
+    private fun getSumAtPosition(number: Int, position: Position): Int {
+        return number * position.min
+    }
+
+    private fun convertNumber(number: Int): String {
+        val lowerNumeral = nextLowestNumeralForPosition(number, Position.ONE) ?: Numeral.ONE
+        val higherNumeral = nextHighestNumeralForPosition(number, Position.ONE) ?: Numeral.ONE_HUNDRED
         val matchingNumeral = matchingRomanNumeral(number)
 
         if (matchingNumeral != null) return matchingNumeral.numeral
@@ -19,8 +34,16 @@ class Converter {
         return numerals.firstOrNull { numeral -> number > numeral.value }
     }
 
+    private fun nextLowestNumeralForPosition(number: Int, position: Position): Numeral? {
+        return if (number > 5) position.numeralFive else position.numeralOne
+    }
+
     private fun nextHighestNumeral(number: Int): Numeral? {
         return Numeral.values().firstOrNull { numeral -> number < numeral.value }
+    }
+
+    private fun nextHighestNumeralForPosition(number: Int, position: Position): Numeral? {
+        return if (number < 5) position.numeralFive else position.numeralTen
     }
 
     private fun matchingRomanNumeral(number: Int): Numeral? {
