@@ -49,12 +49,4 @@ class Converter {
     private fun one(): String {
         return Numeral.ONE.numeral
     }
-
-    private fun five(): String {
-        return Numeral.FIVE.numeral
-    }
-
-    private fun ten(): String {
-        return Numeral.TEN.numeral
-    }
 }
