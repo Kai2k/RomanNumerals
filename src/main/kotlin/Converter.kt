@@ -3,28 +3,24 @@ class Converter {
         return convertOnes(input)
     }
 
-    private fun one(times: Int = 1): String {
+    private fun times(times: Int = 1, completion: () -> String): String {
         var output = ""
         for (i in 1..times) {
-            output += Numeral.ONE.numeral
+            output += completion()
         }
         return output
     }
 
-    private fun five(times: Int = 1): String {
-        var output = ""
-        for (i in 1..times) {
-            output += Numeral.FIVE.numeral
-        }
-        return output
+    private fun one(): String {
+        return Numeral.ONE.numeral
     }
 
-    private fun ten(times: Int = 1): String {
-        var output = ""
-        for (i in 1..times) {
-            output += Numeral.TEN.numeral
-        }
-        return output
+    private fun five(): String {
+        return Numeral.FIVE.numeral
+    }
+
+    private fun ten(): String {
+        return Numeral.TEN.numeral
     }
 
     private fun convertOnes(number: Int): String {
@@ -34,12 +30,12 @@ class Converter {
 
         if (matchingNumeral != null) return matchingNumeral.numeral
 
-        if (shouldSubtractFromNextHighestNumeral(number, higherNumeral.value )) {
+        if (shouldSubtractFromNextHighestNumeral(number, higherNumeral.value)) {
             return one() + higherNumeral.numeral
         }
         var output = lowerNumeral.numeral
         val difference = number - lowerNumeral.value
-        output += one(difference)
+        output += times(difference) { one() }
         return output
     }
 
