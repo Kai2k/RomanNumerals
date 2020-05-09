@@ -17,4 +17,11 @@ class ConverterTester {
         val result = Converter().convert(input)
         assertEquals(output, result)
     }
+
+    @ParameterizedTest
+    @CsvSource("21, XXI", "39, XXXIX", "75, LXXV", "100, C", "213, CCXIII", "999, CMXCIX", "555, DLV")
+    fun `convert numbers greater than 20 into roman numeral`(input: Int, output: String) {
+        val result = Converter().convert(input)
+        assertEquals(output, result)
+    }
 }

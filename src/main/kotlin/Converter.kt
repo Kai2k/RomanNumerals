@@ -26,7 +26,7 @@ class Converter {
         val matchingNumeral = matchingRomanNumeral(number, position)
 
         if (matchingNumeral != null) return matchingNumeral.numeral
-        if (shouldSubtractFromNextHighestNumeral(number, higherNumeral.value)) return one() + higherNumeral.numeral
+        if (shouldSubtractFromNextHighestNumeral(number, higherNumeral.value, position)) return position.numeralOne.numeral + higherNumeral.numeral
         return convertToNumeralsWithAddition(lowerNumeral, number, position)
     }
 
@@ -47,11 +47,11 @@ class Converter {
     }
 
     private fun matchingRomanNumeral(number: Int, position: Position): Numeral? {
-        return position.numerals().firstOrNull { numeral -> numeral.value == number }
+        return position.numerals().firstOrNull { numeral -> numeral.valueForAddition == number }
     }
 
-    private fun shouldSubtractFromNextHighestNumeral(number: Int, nextHighestNumeralValue: Int): Boolean {
-        return nextHighestNumeralValue - number == 1
+    private fun shouldSubtractFromNextHighestNumeral(number: Int, nextHighestNumeralValue: Int, position: Position): Boolean {
+        return nextHighestNumeralValue - (number * position.min) == position.min
     }
 
     private fun convertToNumeralsWithAddition(lowerNumeral: Numeral, number: Int, position: Position): String {
