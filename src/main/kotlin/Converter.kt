@@ -24,15 +24,16 @@ class Converter {
     }
 
     private fun convertOnes(number: Int): String {
-        val lowerNumeral = nextLowestNumeral(number)
-        val higherNumeral = nextHighestNumeral(number)
+        val lowerNumeral = nextLowestNumeral(number) ?: Numeral.ONE
+        val higherNumeral = nextHighestNumeral(number) ?: Numeral.ONE_HUNDRED
         val matchingNumeral = matchingRomanNumeral(number)
 
         if (matchingNumeral != null) return matchingNumeral.numeral
+        if (shouldSubtractFromNextHighestNumeral(number, higherNumeral.value)) return one() + higherNumeral.numeral
+        return convertToNumeralsWithAddition(lowerNumeral, number)
+    }
 
-        if (shouldSubtractFromNextHighestNumeral(number, higherNumeral.value)) {
-            return one() + higherNumeral.numeral
-        }
+    private fun convertToNumeralsWithAddition(lowerNumeral: Numeral, number: Int): String {
         var output = lowerNumeral.numeral
         val difference = number - lowerNumeral.value
         output += times(difference) { one() }
@@ -47,17 +48,13 @@ class Converter {
         return nextHighestNumeralValue - number == 1
     }
 
-    private fun nextHighestNumeral(number: Int): Numeral {
-        if (number < Numeral.FIVE.value) return Numeral.FIVE
-        if (number < Numeral.TEN.value) return Numeral.TEN
-        if (number < Numeral.FIFTY.value) return Numeral.FIFTY
-        return Numeral.ONE_HUNDRED
+    private fun nextHighestNumeral(number: Int): Numeral? {
+        return Numeral.values().firstOrNull { numeral -> number < numeral.value }
     }
 
-    private fun nextLowestNumeral(number: Int): Numeral {
-        if (number > Numeral.FIFTY.value) return Numeral.FIFTY
-        if (number > Numeral.TEN.value) return Numeral.TEN
-        if (number > Numeral.FIVE.value) return Numeral.FIVE
-        return Numeral.ONE
+    private fun nextLowestNumeral(number: Int): Numeral? {
+        val numerals = Numeral.values()
+        numerals.reverse()
+        return numerals.firstOrNull { numeral -> number > numeral.value }
     }
 }
