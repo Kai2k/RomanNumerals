@@ -17,7 +17,7 @@ class Converter {
         while (abc > 0) {
             val highestPosition = highestPosition(abc)
             output = output.plus(convertNumber(getCountAtPosition(abc, highestPosition), highestPosition))
-            abc = abc.minus(getSumAtPosition(abc, highestPosition))
+            abc = abc.minus(getSumAtPosition(getCountAtPosition(abc, highestPosition), highestPosition))
         }
         return output
     }
@@ -37,7 +37,7 @@ class Converter {
 
         if (matchingNumeral != null) return matchingNumeral.numeral
         if (shouldSubtractFromNextHighestNumeral(number, higherNumeral.value)) return one() + higherNumeral.numeral
-        return convertToNumeralsWithAddition(lowerNumeral, number)
+        return convertToNumeralsWithAddition(lowerNumeral, number, position)
     }
 
     private fun nextLowestNumeralForPosition(number: Int, position: Position): Numeral? {
@@ -50,17 +50,16 @@ class Converter {
 
     private fun matchingRomanNumeral(number: Int, position: Position): Numeral? {
         return position.numerals().firstOrNull { numeral -> numeral.value == number }
-//        return Numeral.values().firstOrNull { numeral -> numeral.value == number }
     }
 
     private fun shouldSubtractFromNextHighestNumeral(number: Int, nextHighestNumeralValue: Int): Boolean {
         return nextHighestNumeralValue - number == 1
     }
 
-    private fun convertToNumeralsWithAddition(lowerNumeral: Numeral, number: Int): String {
+    private fun convertToNumeralsWithAddition(lowerNumeral: Numeral, number: Int, position: Position): String {
         var output = lowerNumeral.numeral
-        val difference = number - lowerNumeral.value
-        output += times(difference) { one() }
+        val difference = number - lowerNumeral.incremental
+        output += times(difference) { position.numeralOne.numeral }
         return output
     }
 

@@ -1,7 +1,7 @@
-enum class Numeral(val value: Int, val numeral: String) {
-    ONE(1, "I"),
-    FIVE(5, "V"),
-    TEN(10, "X"),
-    FIFTY(50, "L"),
-    ONE_HUNDRED(100, "C")
+enum class Numeral(val value: Int, val numeral: String, val incremental: Int) {
+    ONE(1, "I", 1),
+    FIVE(5, "V", 5),
+    TEN(10, "X", 1),
+    FIFTY(50, "L", 5),
+    ONE_HUNDRED(100, "C", 1)
 }
