@@ -2,7 +2,8 @@ import javafx.geometry.Pos
 
 class Converter {
     fun convert(input: Int): String {
-        return convertNumber(input)
+//        return convertNumber(input, Position.ONE)
+        return foo(input)
     }
 
     private fun highestPosition(number: Int): Position {
@@ -10,44 +11,46 @@ class Converter {
         return positions.first { position -> position.min <= number && number <= position.max }
     }
 
-    private fun foo(number: Int) {
-        val highestPosition = highestPosition(number)
+    private fun foo(number: Int): String {
+        var output = ""
+        var abc = number
+        while (abc > 0) {
+            val highestPosition = highestPosition(abc)
+            output = output.plus(convertNumber(getCountAtPosition(abc, highestPosition), highestPosition))
+            abc = abc.minus(getSumAtPosition(abc, highestPosition))
+        }
+        return output
     }
 
     private fun getSumAtPosition(number: Int, position: Position): Int {
         return number * position.min
     }
 
-    private fun convertNumber(number: Int): String {
-        val lowerNumeral = nextLowestNumeralForPosition(number, Position.ONE) ?: Numeral.ONE
-        val higherNumeral = nextHighestNumeralForPosition(number, Position.ONE) ?: Numeral.ONE_HUNDRED
-        val matchingNumeral = matchingRomanNumeral(number)
+    private fun getCountAtPosition(number: Int, position: Position): Int {
+        return number / position.min
+    }
+
+    private fun convertNumber(number: Int, position: Position): String {
+        val lowerNumeral = nextLowestNumeralForPosition(number, position) ?: position.numeralOne
+        val higherNumeral = nextHighestNumeralForPosition(number, position) ?: position.numeralTen
+        val matchingNumeral = matchingRomanNumeral(number, position)
 
         if (matchingNumeral != null) return matchingNumeral.numeral
         if (shouldSubtractFromNextHighestNumeral(number, higherNumeral.value)) return one() + higherNumeral.numeral
         return convertToNumeralsWithAddition(lowerNumeral, number)
     }
 
-    private fun nextLowestNumeral(number: Int): Numeral? {
-        val numerals = Numeral.values()
-        numerals.reverse()
-        return numerals.firstOrNull { numeral -> number > numeral.value }
-    }
-
     private fun nextLowestNumeralForPosition(number: Int, position: Position): Numeral? {
         return if (number > 5) position.numeralFive else position.numeralOne
-    }
-
-    private fun nextHighestNumeral(number: Int): Numeral? {
-        return Numeral.values().firstOrNull { numeral -> number < numeral.value }
     }
 
     private fun nextHighestNumeralForPosition(number: Int, position: Position): Numeral? {
         return if (number < 5) position.numeralFive else position.numeralTen
     }
 
-    private fun matchingRomanNumeral(number: Int): Numeral? {
-        return Numeral.values().firstOrNull { numeral -> numeral.value == number }
+    private fun matchingRomanNumeral(number: Int, position: Position): Numeral? {
+        return position.numerals().firstOrNull { numeral -> numeral.value == number }
+//        return Numeral.values().firstOrNull { numeral -> numeral.value == number }
     }
 
     private fun shouldSubtractFromNextHighestNumeral(number: Int, nextHighestNumeralValue: Int): Boolean {
