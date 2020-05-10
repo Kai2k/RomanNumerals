@@ -68,8 +68,4 @@ class Converter {
         }
         return output
     }
-
-    private fun one(): String {
-        return Numeral.ONE.numeral
-    }
 }
